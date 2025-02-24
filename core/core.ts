@@ -55,6 +55,7 @@ import CodebaseContextProvider from "./context/providers/CodebaseContextProvider
 import CurrentFileContextProvider from "./context/providers/CurrentFileContextProvider";
 import type { FromCoreProtocol, ToCoreProtocol } from "./protocol";
 import type { IMessenger, Message } from "./protocol/messenger";
+import { augmentContextItems } from "./3pq/custom-3pq";
 
 export class Core {
   configHandler: ConfigHandler;
@@ -392,15 +393,17 @@ export class Core {
             fetchwithRequestOptions(url, init, config.requestOptions),
         });
 
-        void Telemetry.capture(
+        const augmentedItems = await augmentContextItems(items, ide)
+
+        /* void Telemetry.capture(
           "useContextProvider",
           {
             name: provider.description.title,
           },
           true,
-        );
+        ); */
 
-        return items.map((item) => ({
+        return augmentedItems.map((item) => ({
           ...item,
           id,
         }));

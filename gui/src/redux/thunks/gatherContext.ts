@@ -53,9 +53,9 @@ export const gatherContext = createAsyncThunk<
       });
 
     // Automatically use currently open file
-    if (!modifiers.noContext) {
+    if (true) {
       const usingFreeTrial = defaultModel?.provider === "free-trial";
-
+    
       const currentFileResponse = await extra.ideMessenger.request(
         "context/getContextItems",
         {
@@ -96,6 +96,16 @@ export const gatherContext = createAsyncThunk<
             selectedContextItems.unshift(currentFile);
           }
         }
+
+        for (let i=1; i < items.length; ++i ){
+          if (
+            !selectedContextItems.find(
+              (item) => item.uri?.value.includes("ConfigurationApi.d.ts"),
+            )
+          ) {
+          selectedContextItems.push(items[i]);
+          }
+        } 
       }
     }
 
@@ -106,6 +116,8 @@ export const gatherContext = createAsyncThunk<
         content[0].text = promptPreamble + content[0].text;
       }
     }
+
+    
 
     // dispatch(addContextItems(contextItems));
     return { selectedContextItems, selectedCode, content };

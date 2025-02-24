@@ -115,7 +115,7 @@ export function renderPrompt({
     helper.lang,
     helper.modelName,
   );
-
+  
   return {
     prompt,
     prefix,
