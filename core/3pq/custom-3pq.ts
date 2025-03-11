@@ -1,3 +1,6 @@
+import { IDE } from "..";
+import { AutocompleteCodeSnippet, AutocompleteSnippet, AutocompleteSnippetType } from "../autocomplete/snippets/types";
+
 const file = "file:///mnt/c/Users/rtauer/AppData/Roaming/plansoft/engines/product-configurator-v1.18.8-win/Content/Base/Scripts/system/ConfigurationApi.d.ts"
 
 export async function augmentContextItems(items: any[], context: any): Promise<any[]> {
@@ -21,3 +24,12 @@ export function renderAugmentedPrompt(promptObject: any): any {
     return promptObject;
   
   }
+
+export async function getAugmentedSnippetPayload(snippetPayload: AutocompleteCodeSnippet[], ide: IDE): Promise<AutocompleteCodeSnippet[]> {
+  snippetPayload.push({
+    content: await ide.readFile(file),
+    filepath: file,
+    type: AutocompleteSnippetType.Code
+  });
+  return snippetPayload;
+}

@@ -92,7 +92,7 @@ export const getSnippets = (
       {
         key: "base",
         enabledOrPriority: true,
-        defaultPriority: 99, // make sure it's the last one to be processed, but still possible to override
+        defaultPriority: 0, // make sure it's the last one to be processed, but still possible to override
         snippets: shuffleArray(filterSnippetsAlreadyInCaretWindow(
           [...payload.rootPathSnippets, ...payload.importDefinitionSnippets],
           helper.prunedCaretWindow,
@@ -140,8 +140,12 @@ export const getSnippets = (
       continue;
     }
 
+    if (snippet.content.includes("auto-generated")) {
+      snippet.content = snippet.content.substring(0, 1000);
+    }
+
     const snippetSize =
-      countTokens(snippet.content, helper.modelName) + TOKEN_BUFFER;
+    countTokens(snippet.content, helper.modelName) + TOKEN_BUFFER;
 
     if (remainingTokenCount >= snippetSize) {
       finalSnippets.push(snippet);
