@@ -7,6 +7,7 @@ import {
   constructLlmApi,
 } from "@continuedev/openai-adapters";
 import Handlebars from "handlebars";
+import * as logger from '../3pq/logger'
 
 import { DevDataSqliteDb } from "../data/devdataSqlite.js";
 import { DataLogger } from "../data/log.js";
@@ -875,6 +876,10 @@ export abstract class BaseLLM implements ILLM {
       ? this.templateMessages(messages)
       : this._formatChatMessages(messages);
     if (logEnabled) {
+      let mylogger = logger.Logger
+      mylogger.level = "debug";
+      mylogger.debug("Stream Chat Log - "+prompt);
+      
       interaction?.logItem({
         kind: "startChat",
         messages,
