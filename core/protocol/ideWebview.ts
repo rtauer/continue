@@ -4,22 +4,18 @@ import { ToWebviewFromIdeOrCoreProtocol } from "./webview";
 import type {
   ApplyState,
   CodeToEdit,
-  ContextSubmenuItem,
-  EditStatus,
   MessageContent,
   RangeInFileWithContents,
 } from "../";
 
 export type ToIdeFromWebviewProtocol = ToIdeFromWebviewOrCoreProtocol & {
   openUrl: [string, void];
-  // We pass the `curSelectedModel` because we currently cannot access the
-  // default model title in the GUI from JB
   applyToFile: [
     {
       text: string;
       streamId: string;
-      curSelectedModelTitle: string;
       filepath?: string;
+      toolCallId?: string;
     },
     void,
   ];
@@ -49,14 +45,14 @@ export type ToIdeFromWebviewProtocol = ToIdeFromWebviewOrCoreProtocol & {
   acceptDiff: [{ filepath: string; streamId?: string }, void];
   rejectDiff: [{ filepath: string; streamId?: string }, void];
   "edit/sendPrompt": [
-    { prompt: MessageContent; range: RangeInFileWithContents },
-    void,
+    {
+      prompt: MessageContent;
+      range: RangeInFileWithContents;
+    },
+    string | undefined,
   ];
-  "edit/acceptReject": [
-    { accept: boolean; onlyFirst: boolean; filepath: string },
-    void,
-  ];
-  "edit/exit": [{ shouldFocusEditor: boolean }, void];
+  "edit/addCurrentSelection": [undefined, void];
+  "edit/clearDecorations": [undefined, void];
 };
 
 export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {
@@ -75,7 +71,7 @@ export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {
     },
     void,
   ];
-  addCodeToEdit: [CodeToEdit, void];
+  setCodeToEdit: [CodeToEdit, void];
   navigateTo: [{ path: string; toggle?: boolean }, void];
   addModel: [undefined, void];
 
@@ -91,8 +87,6 @@ export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {
   openOnboardingCard: [undefined, void];
   applyCodeFromChat: [undefined, void];
   updateApplyState: [ApplyState, void];
-  setEditStatus: [{ status: EditStatus; fileAfterEdit?: string }, void];
   exitEditMode: [undefined, void];
   focusEdit: [undefined, void];
-  focusEditWithoutClear: [undefined, void];
 };

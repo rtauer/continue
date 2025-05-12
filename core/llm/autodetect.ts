@@ -9,6 +9,7 @@ import {
   anthropicTemplateMessages,
   chatmlTemplateMessages,
   codeLlama70bTemplateMessages,
+  codestralTemplateMessages,
   deepseekTemplateMessages,
   gemmaTemplateMessage,
   graniteTemplateMessages,
@@ -58,6 +59,7 @@ const PROVIDER_HANDLES_TEMPLATING: string[] = [
   "vertexai",
   "watsonx",
   "nebius",
+  "relace",
 ];
 
 const PROVIDER_SUPPORTS_IMAGES: string[] = [
@@ -71,10 +73,14 @@ const PROVIDER_SUPPORTS_IMAGES: string[] = [
   "sagemaker",
   "continue-proxy",
   "openrouter",
+  "venice",
+  "sambanova",
   "vertexai",
   "azure",
   "scaleway",
   "nebius",
+  "ovhcloud",
+  "watsonx",
 ];
 
 const MODEL_SUPPORTS_IMAGES: string[] = [
@@ -92,6 +98,9 @@ const MODEL_SUPPORTS_IMAGES: string[] = [
   "haiku",
   "pixtral",
   "llama3.2",
+  "llama-3.2",
+  "llama4",
+  "granite-vision",
 ];
 
 function modelSupportsTools(modelDescription: ModelDescription) {
@@ -144,6 +153,7 @@ const PARALLEL_PROVIDERS: string[] = [
   "together",
   "novita",
   "sambanova",
+  "ovhcloud",
   "nebius",
   "vertexai",
   "function-network",
@@ -172,7 +182,8 @@ function autodetectTemplateType(model: string): TemplateType | undefined {
     lower.includes("pplx") ||
     lower.includes("gemini") ||
     lower.includes("grok") ||
-    lower.includes("moonshot")
+    lower.includes("moonshot") ||
+    lower.includes("mercury")
   ) {
     return undefined;
   }
@@ -287,6 +298,7 @@ function autodetectTemplateFunction(
       gemma: gemmaTemplateMessage,
       granite: graniteTemplateMessages,
       llama3: llama3TemplateMessages,
+      codestral: codestralTemplateMessages,
       none: null,
     };
 
@@ -377,5 +389,6 @@ export {
   autodetectTemplateType,
   llmCanGenerateInParallel,
   modelSupportsImages,
-  modelSupportsTools,
+  modelSupportsTools
 };
+
