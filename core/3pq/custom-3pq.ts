@@ -1,13 +1,30 @@
 import { IDE } from "..";
 import { AutocompleteCodeSnippet, AutocompleteSnippet, AutocompleteSnippetType } from "../autocomplete/snippets/types";
+import * as logger from './logger'
 
 const file = "file:///mnt/c/Users/rtauer/AppData/Roaming/plansoft/engines/product-configurator-v1.18.8-win/Content/Base/Scripts/system/ConfigurationApi.d.ts"
 
-export async function augmentContextItems(items: any[], context: any): Promise<any[]> {
-    //TODO Schauen wo Chat zusammengesetzt wird und wo Prompt herkommt
-    // Bevor Prompt verarbeitet wird, ConfigApidts reinschmeißen
+export async function augmentContextItems(items: any[], context: any, fullInput: any): Promise<any[]> {
+    //TODO LOGS SCHREIBEN FÜR BESSERES ANGENEHMERES ÜBERPRÜFEN DER STEPS
+    //TODO Query Eingabe nicht mehr Hardcoden
+  
+  let mylogger = logger.Logger;
+  mylogger.level = "debug";
+
+  const parsedFullInput = JSON.parse(fullInput);
+  const query = parsedFullInput[0]?.text;
+
+  let json = JSON.stringify({
+    "query":query,
+    "n_results":5
+  })
+  
+  let response = await fetch("http://172.26.240.1:8000/chroma", {method:"POST", headers:{"Content-Type": "application/json"}, body:json})
+  let result = await response.json()
+  let docs = result.documents.join("\n")
+
   items.push({
-    content: await context.readFile(file),
+    content: docs,
     description: "ConfigurationApi.d.ts",
     name: "ConfigurationApi.d.ts",
     uri: {
@@ -15,6 +32,7 @@ export async function augmentContextItems(items: any[], context: any): Promise<a
         value: file
     }
   });
+  mylogger.debug("augmentContextItems - "+docs);
   return items;
   
 }

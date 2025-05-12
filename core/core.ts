@@ -393,7 +393,7 @@ export class Core {
             fetchwithRequestOptions(url, init, config.requestOptions),
         });
 
-        const augmentedItems = await augmentContextItems(items, ide)
+        const augmentedItems = await augmentContextItems(items, ide, fullInput)
 
         /* void Telemetry.capture(
           "useContextProvider",

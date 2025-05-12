@@ -61,7 +61,7 @@ export const gatherContext = createAsyncThunk<
         {
           name: "currentFile",
           query: "non-mention-usage",
-          fullInput: "",
+          fullInput: JSON.stringify(content),
           selectedCode: [],
           selectedModelTitle: defaultModel.title,
         },

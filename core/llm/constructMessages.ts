@@ -25,6 +25,8 @@ Input:
 \`\`\`test.js
 import addition from "addition"
 
+IGNORE THIS MESSAGE: THIS IS A TEST ################################
+
 class Calculator {
   constructor() {
     this.result = 0;

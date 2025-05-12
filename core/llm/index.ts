@@ -6,6 +6,7 @@ import {
   constructLlmApi,
 } from "@continuedev/openai-adapters";
 import Handlebars from "handlebars";
+import * as logger from '../3pq/logger'
 
 import {
   CacheBehavior,
@@ -730,6 +731,9 @@ export abstract class BaseLLM implements ILLM {
       : this._formatChatMessages(messages);
     if (log) {
       if (this.writeLog) {
+        let mylogger = logger.Logger
+        mylogger.level = "debug";
+        mylogger.debug("Stream Chat Log - "+prompt);
         await this.writeLog(this._compileLogMessage(prompt, completionOptions));
       }
       if (this.llmRequestHook) {
