@@ -1,3 +1,4 @@
+import { renderAugmentedPrompt, getAugmentedSnippetPayload } from "../3pq/custom-3pq.js";
 import { ConfigHandler } from "../config/ConfigHandler.js";
 import { TRIAL_FIM_MODEL } from "../config/onboarding.js";
 import { IDE, ILLM } from "../index.js";
@@ -179,11 +180,15 @@ export class CompletionProvider {
         this.ide.getWorkspaceDirs(),
       ]);
 
-      const { prompt, prefix, suffix, completionOptions } = renderPrompt({
+      snippetPayload.importDefinitionSnippets = await getAugmentedSnippetPayload(snippetPayload.importDefinitionSnippets, this.ide);
+
+      const promptObject = renderPrompt({
         snippetPayload,
         workspaceDirs,
         helper,
       });
+
+      const { prompt, prefix, suffix, completionOptions } = renderAugmentedPrompt(promptObject);
 
       // Completion
       let completion: string | undefined = "";

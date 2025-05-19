@@ -61,7 +61,7 @@ export const gatherContext = createAsyncThunk<
       });
 
     // Automatically use currently open file
-    if (!modifiers.noContext) {
+    if (true) {
       const usingFreeTrial = selectedChatModel.provider === "free-trial";
 
       const currentFileResponse = await extra.ideMessenger.request(
@@ -69,7 +69,7 @@ export const gatherContext = createAsyncThunk<
         {
           name: "currentFile",
           query: "non-mention-usage",
-          fullInput: "",
+          fullInput: JSON.stringify(content),
           selectedCode: [],
         },
       );
@@ -101,6 +101,16 @@ export const gatherContext = createAsyncThunk<
               itemId: uri,
             };
             selectedContextItems.unshift(currentFile);
+          }
+        }
+        
+        for (let i=1; i < items.length; ++i ){
+          if (
+            !selectedContextItems.find(
+              (item) => item.uri?.value.includes("ConfigurationApi.d.ts"),
+            )
+          ) {
+          selectedContextItems.push(items[i]);
           }
         }
       }
